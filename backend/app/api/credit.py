@@ -81,7 +81,7 @@ def calculate_credit():
     total_earned = 0.0
 
     for rule in rules:
-        required = float(rule.required_credits)
+        required = float(rule.min_credit)
         earned = earned_by_category.get(rule.category, 0.0)
         remaining = max(0.0, required - earned)
 
@@ -93,7 +93,7 @@ def calculate_credit():
 
         summary.append({
             "category": rule.category,
-            "rule_name": rule.rule_name,
+            "description": rule.description,
             "required": required,
             "earned": round(earned, 1),
             "remaining": round(remaining, 1),

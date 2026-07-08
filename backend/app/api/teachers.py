@@ -45,6 +45,7 @@ def get_teachers():
             db.or_(
                 Teacher.name.like(pattern),
                 Teacher.department.like(pattern),
+                Teacher.research.like(pattern),
                 Teacher.bio.like(pattern),
             )
         )
