@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: coursecompass
+    env: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && gunicorn -c gunicorn_config.py wsgi:prod_app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
