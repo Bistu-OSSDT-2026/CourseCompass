@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 
 class Teacher(db.Model):
     """老师表"""
-    __tablename__ = "teachers"
+    __tablename__ = "teacher"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)

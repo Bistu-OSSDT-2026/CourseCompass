@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 
 class Comment(db.Model):
     """评论表"""
-    __tablename__ = "comments"
+    __tablename__ = "comment"
 
     # ========================
     #   列定义
@@ -56,7 +56,12 @@ class Comment(db.Model):
 
     # --- 反向关系 ---
     # 在 Course 对象上可以用 .comments 拿到所有评论
-    course = db.relationship("Course", backref="comments")
+    course = db.relationship(
+        "Course",
+        backref="comments",
+        foreign_keys=[course_id],
+        primaryjoin="Comment.course_id == Course.id",
+    )
 
     def to_dict(self):
         """转字典"""

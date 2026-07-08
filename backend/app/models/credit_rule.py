@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 
 class CreditRule(db.Model):
     """学分规则表"""
-    __tablename__ = "credit_rules"
+    __tablename__ = "credit_rule"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     category = db.Column(db.String(50), nullable=False)            # 专业必修/专业选修/公共选修/实践环节

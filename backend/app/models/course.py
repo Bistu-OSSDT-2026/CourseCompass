@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 
 class Course(db.Model):
     """课程表"""
-    __tablename__ = "courses"
+    __tablename__ = "course"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
@@ -25,7 +25,12 @@ class Course(db.Model):
     teacher_id = db.Column(db.Integer, db.ForeignKey("teachers.id"), nullable=True)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
-    teacher = db.relationship("Teacher", backref="courses")
+    teacher = db.relationship(
+        "Teacher",
+        backref="courses",
+        foreign_keys=[teacher_id],
+        primaryjoin="Course.teacher_id == Teacher.id",
+    )
 
     def to_dict(self):
         return {
