@@ -47,6 +47,8 @@ class Course(db.Model):
             "rating": round(self.rating, 1),
             "teacher_id": self.teacher_id,
             "teacher_name": self.teacher.name if self.teacher else None,
+            "teacher_title": self.teacher.title if self.teacher else None,
+            "teacher_department": self.teacher.department if self.teacher else None,
             "created_at": self.created_at.isoformat() if self.created_at else None,
         }
 
