@@ -1,7 +1,7 @@
 """
 Holland 职业兴趣测试接口
 ========================
-GET  /api/quiz/questions  → 获取 20 道测试题
+GET  /api/quiz/questions  → 获取 20 道测试题（四选一格式）
 POST /api/quiz/submit     → 提交答案，计算 Holland 类型 + 推荐课程
 
 Holland 六种类型（RIASEC）:
@@ -12,6 +12,8 @@ Holland 六种类型（RIASEC）:
   E = 企业型 (Enterprising) — 喜欢领导说服、竞争、商业活动
   C = 常规型 (Conventional) — 喜欢组织规范、数据处理、按流程办事
 """
+import json
+import os
 from flask import Blueprint, request
 from app.models.course import Course
 from app.api.helpers import ok, bad_request
@@ -19,31 +21,21 @@ from app.api.helpers import ok, bad_request
 quiz_bp = Blueprint("quiz", __name__)
 
 # ============================================================
-#  20 道测试题
-#  每道题对应一个 Holland 类型，回答 "yes" 即加 1 分
+#  从 JSON 文件加载题目（四选一格式）
+#  每题 4 个选项，每个选项对应一个 Holland 类型
 # ============================================================
-QUESTIONS = [
-    {"id": 1,  "text": "我喜欢动手修理或组装东西",                            "type": "R"},
-    {"id": 2,  "text": "我对自然科学的奥秘充满好奇",                          "type": "I"},
-    {"id": 3,  "text": "我喜欢绘画、写作或音乐创作",                          "type": "A"},
-    {"id": 4,  "text": "我乐于帮助朋友解决困难",                              "type": "S"},
-    {"id": 5,  "text": "我喜欢在团队中担任领导者角色",                         "type": "E"},
-    {"id": 6,  "text": "我喜欢把物品或文件整理得井井有条",                     "type": "C"},
-    {"id": 7,  "text": "我喜欢户外活动或体育运动",                            "type": "R"},
-    {"id": 8,  "text": "我喜欢独自思考或做研究",                              "type": "I"},
-    {"id": 9,  "text": "我喜欢参观美术馆或听音乐会",                          "type": "A"},
-    {"id": 10, "text": "我善于倾听别人的烦恼并给予安慰",                       "type": "S"},
-    {"id": 11, "text": "我喜欢参加演讲比赛或辩论",                            "type": "E"},
-    {"id": 12, "text": "我做事喜欢按照计划一步一步来",                         "type": "C"},
-    {"id": 13, "text": "我对机械或电子设备的工作原理感兴趣",                   "type": "R"},
-    {"id": 14, "text": "我喜欢通过实验或数据来验证观点",                       "type": "I"},
-    {"id": 15, "text": "我有丰富的想象力，经常产生创意点子",                   "type": "A"},
-    {"id": 16, "text": "我喜欢参加志愿活动或社区服务",                         "type": "S"},
-    {"id": 17, "text": "我喜欢销售或推销产品",                                "type": "E"},
-    {"id": 18, "text": "我注重细节，能发现别人忽略的错误",                     "type": "C"},
-    {"id": 19, "text": "我喜欢亲自动手制作东西而不是看书",                     "type": "R"},
-    {"id": 20, "text": "我愿意花大量时间钻研一个复杂问题",                     "type": "I"},
-]
+def _load_questions():
+    json_path = os.path.join(
+        os.path.dirname(__file__), "..", "data", "quiz_questions.json"
+    )
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data["questions"]
+
+QUESTIONS = _load_questions()
+
+# 选项字母 → 数组索引映射
+OPTION_MAP = {"A": 0, "B": 1, "C": 2, "D": 3}
 
 # Holland 类型详细信息
 HOLLAND_INFO = {
@@ -61,8 +53,8 @@ def get_questions():
     """
     获取测试题
     ----------
-    返回 20 道 Holland 测试题，前端根据这些题目渲染问卷页面。
-    每道题包含 id、题目文本、对应的 Holland 类型。
+    返回 20 道 Holland 四选一测试题。
+    每题包含题目文本和 4 个选项（A/B/C/D），每个选项对应一种 Holland 类型。
     """
     return ok({
         "questions": QUESTIONS,
@@ -75,17 +67,16 @@ def submit_quiz():
     """
     提交测试答案
     ------------
-    接收 20 道题的答案，统计每种 Holland 类型的得分，
+    接收 20 道题的答案（每题选 A/B/C/D），统计每种 Holland 类型的得分，
     找出主导类型，推荐匹配课程。
 
     请求格式:
     {
-        "answers": [
-            "yes", "no", "yes", "yes", "no",  ...   // 20 个，按题号顺序
-        ]
+        "answers": ["A", "B", "C", "D", "A", ...]   // 20 个，按题号顺序
     }
 
-    答案值: "yes" 表示喜欢 +1 分，"no" 不加分
+    每个答案 A/B/C/D 对应每道题的第 1/2/3/4 个选项，
+    该选项的 Holland 类型 +1 分。
 
     返回:
     {
@@ -98,38 +89,34 @@ def submit_quiz():
     """
     data = request.get_json(silent=True)
     if not data or "answers" not in data:
-        return bad_request("请提供 answers 字段（20 个答案组成的数组）")
+        return bad_request("请提供 answers 字段（20 个答案组成的数组，每个值为 A/B/C/D）")
 
     answers = data["answers"]
     if not isinstance(answers, list) or len(answers) != 20:
-        return bad_request(f"answers 必须是包含 20 个元素的数组，当前长度: {len(answers) if isinstance(answers, list) else '非数组'}")
+        return bad_request(
+            f"answers 必须是包含 20 个元素的数组，当前长度: "
+            f"{len(answers) if isinstance(answers, list) else '非数组'}"
+        )
 
     # --- 第1步：统计每种类型的得分 ---
-    # 支持两种答题格式:
-    #   李克特量表: A=1分, B=2分, C=3分, D=4分, E=5分 (前端格式)
-    #   二值格式:   yes/1/true/y = 1分, 其他 = 0分 (原后端格式)
-    LIKERT_SCORES = {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5}
+    # 每道题选 A/B/C/D → 查对应选项的 Holland 类型 → 该类型 +1 分
     scores = {"R": 0, "I": 0, "A": 0, "S": 0, "E": 0, "C": 0}
-
-    # 检测答案格式：如果第一个有效答案在 A-E 范围内，则使用李克特计分
-    first_answer = str(answers[0]).strip().upper() if answers else ""
-    use_likert = first_answer in LIKERT_SCORES
 
     for i, answer in enumerate(answers):
         if i >= 20:
             break
-        question_type = QUESTIONS[i]["type"]
-        ans = str(answer).strip()
+        ans = str(answer).strip().upper()
+        idx = OPTION_MAP.get(ans, -1)
+        if idx < 0:
+            continue  # 无效答案，跳过
 
-        if use_likert:
-            score = LIKERT_SCORES.get(ans.upper(), 0)
-            scores[question_type] += score
-        else:
-            if ans.lower() in ("yes", "1", "true", "y"):
-                scores[question_type] += 1
+        question = QUESTIONS[i]
+        if idx < len(question["options"]):
+            holland_type = question["options"][idx]["type"]
+            if holland_type in scores:
+                scores[holland_type] += 1
 
     # --- 第2步：找主导类型 ---
-    # 按得分排序，取最高的
     sorted_types = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     primary_type, primary_score = sorted_types[0]
     second_type, second_score = sorted_types[1]
