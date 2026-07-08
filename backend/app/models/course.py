@@ -22,7 +22,7 @@ class Course(db.Model):
     holland_tags = db.Column(db.String(50), default="")                # "R,I" 逗号分隔
     direction = db.Column(db.String(50), default="")                   # 技术研发/工程实践/...
     rating = db.Column(db.Float, default=0.0)
-    teacher_id = db.Column(db.Integer, db.ForeignKey("teachers.id"), nullable=True)
+    teacher_id = db.Column(db.Integer, db.ForeignKey("teacher.id"), nullable=True)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     teacher = db.relationship(

@@ -22,7 +22,7 @@ class Comment(db.Model):
     # ondelete="CASCADE"：课程被删了，相关评论自动删掉（不会留下孤儿数据）
     course_id = db.Column(
         db.Integer,
-        db.ForeignKey("courses.id", ondelete="CASCADE"),
+        db.ForeignKey("course.id", ondelete="CASCADE"),
         nullable=False,
     )
 
