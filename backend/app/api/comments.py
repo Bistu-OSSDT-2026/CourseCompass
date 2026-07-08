@@ -86,7 +86,7 @@ def submit_comment():
         difficulty=difficulty,
         grading=grading,
         semester=semester,
-        is_visible=False,  # 🔒 强制不可见，必须审核
+        is_visible=True,   # 自动可见
     )
     db.session.add(comment)
     db.session.commit()
