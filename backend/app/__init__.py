@@ -73,23 +73,6 @@ def create_app(static_folder=None):
         from app.models.credit_rule import CreditRule  # noqa: F401
         db.create_all()
 
-        # --- 数据库迁移：为旧表添加新列（如果不存在）---
-        from sqlalchemy import text, inspect
-        inspector = inspect(db.engine)
-        existing_cols = [c["name"] for c in inspector.get_columns("comments")]
-
-        migrations = [
-            ("difficulty", "INTEGER"),
-            ("grading", "VARCHAR(10)"),
-            ("semester", "VARCHAR(20)"),
-        ]
-        for col_name, col_type in migrations:
-            if col_name not in existing_cols:
-                db.session.execute(
-                    text(f"ALTER TABLE comments ADD COLUMN {col_name} {col_type}")
-                )
-        db.session.commit()
-
     # --- 健康检查接口 ---
     @app.route("/api/health")
     def health_check():

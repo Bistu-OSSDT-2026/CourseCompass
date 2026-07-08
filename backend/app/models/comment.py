@@ -27,8 +27,8 @@ class Comment(db.Model):
     )
 
     # --- 评论内容 ---
-    # 用户昵称（因为可能没有登录系统，先让用户手动填）
-    user_nickname = db.Column(db.String(50), nullable=False, default="匿名用户")
+    # 用户昵称
+    nickname = db.Column(db.String(50), nullable=False, default="匿名用户")
 
     # 评论正文
     content = db.Column(db.Text, nullable=False)
@@ -64,7 +64,7 @@ class Comment(db.Model):
             "id": self.id,
             "course_id": self.course_id,
             "course_name": self.course.name if self.course else None,
-            "user_nickname": self.user_nickname,
+            "nickname": self.nickname,
             "content": self.content,
             "rating": self.rating,
             "difficulty": self.difficulty,

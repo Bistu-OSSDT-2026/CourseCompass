@@ -26,12 +26,12 @@ def get_courses():
 
     筛选:
       department   按院系精确匹配
-      holland_type 按 Holland 类型模糊匹配（如 "I" 可匹配 "I,R"）
+      holland_tags 按 Holland 类型模糊匹配（如 "I" 可匹配 "R,I"）
       semester     按学期精确匹配
       teacher_id   按授课老师筛选
 
     排序:
-      sort_by      排序字段（name / credits / rating / id）
+      sort_by      排序字段（name / credit / rating / id）
       sort_order   asc(默认) / desc
 
     分页:
@@ -69,10 +69,20 @@ def get_courses():
     if teacher_id:
         query = query.filter(Course.teacher_id == teacher_id)
 
-    # holland_type 用模糊匹配（存的是 "I,R" 这种，查 "I" 要能匹配到）
-    holland = request.args.get("holland_type", "").strip()
+    # holland_tags 模糊匹配（存的是 "R,I" 这种逗号分隔）
+    holland = request.args.get("holland_tags", "").strip()
     if holland:
-        query = query.filter(Course.holland_type.like(f"%{holland}%"))
+        query = query.filter(Course.holland_tags.like(f"%{holland}%"))
+
+    # 课程类型精确筛选
+    course_type = request.args.get("type", "").strip()
+    if course_type:
+        query = query.filter(Course.type == course_type)
+
+    # 年级筛选
+    grade = request.args.get("grade", "").strip()
+    if grade:
+        query = query.filter(Course.grade == grade)
 
     # ========================================
     #   第2步：排序（白名单校验，防 SQL 注入）
@@ -80,7 +90,7 @@ def get_courses():
     ALLOWED_SORT_FIELDS = {
         "id": Course.id,
         "name": Course.name,
-        "credits": Course.credits,
+        "credit": Course.credit,
         "rating": Course.rating,
     }
 

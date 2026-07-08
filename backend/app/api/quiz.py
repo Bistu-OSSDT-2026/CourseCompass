@@ -143,7 +143,7 @@ def submit_quiz():
     # 查询 holland_type 包含主导类型的课程，按评分降序
     courses = (
         Course.query
-        .filter(Course.holland_type.contains(primary_type))
+        .filter(Course.holland_tags.contains(primary_type))
         .order_by(Course.rating.desc())
         .limit(6)
         .all()
@@ -154,7 +154,7 @@ def submit_quiz():
         existing_ids = {c.id for c in courses}
         extra = (
             Course.query
-            .filter(Course.holland_type.contains(second_type))
+            .filter(Course.holland_tags.contains(second_type))
             .filter(~Course.id.in_(existing_ids))
             .order_by(Course.rating.desc())
             .limit(6 - len(courses))

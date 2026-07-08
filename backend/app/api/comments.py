@@ -25,7 +25,7 @@ def submit_comment():
     请求示例:
     {
         "course_id": 3,
-        "user_nickname": "小明",
+        "nickname": "小明",
         "content": "老师讲得很好，收获很大！",
         "rating": 5
     }
@@ -38,7 +38,7 @@ def submit_comment():
         return bad_request("请求体不能为空，请发送 JSON 格式数据")
 
     course_id = data.get("course_id")
-    user_nickname = (data.get("user_nickname") or "").strip()
+    nickname = (data.get("nickname") or "").strip()
     content = (data.get("content") or "").strip()
     rating = data.get("rating")
     difficulty = data.get("difficulty")
@@ -54,8 +54,8 @@ def submit_comment():
         errors.append("course_id 无效或课程不存在")
 
     # 昵称不能空
-    if not user_nickname:
-        errors.append("user_nickname 不能为空")
+    if not nickname:
+        errors.append("nickname 不能为空")
 
     # 内容不能空，且不能太短
     if not content:
@@ -80,7 +80,7 @@ def submit_comment():
     # --- 第3步：创建评论 ---
     comment = Comment(
         course_id=course_id,
-        user_nickname=user_nickname,
+        nickname=nickname,
         content=content,
         rating=rating,
         difficulty=difficulty,
