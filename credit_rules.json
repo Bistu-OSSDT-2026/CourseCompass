@@ -1,0 +1,29 @@
+{
+  "rules": [
+    {
+      "category": "required",
+      "label": "公共必修课",
+      "min_credit": 40,
+      "description": "全校统一要求的通识必修课程，如思政、英语、体育等"
+    },
+    {
+      "category": "major_elective",
+      "label": "专业选修课",
+      "min_credit": 30,
+      "description": "本专业方向内可供选择的专业课程"
+    },
+    {
+      "category": "general_elective",
+      "label": "公共选修课",
+      "min_credit": 10,
+      "description": "全校范围内自由选修的非专业课程"
+    },
+    {
+      "category": "practice",
+      "label": "实践环节",
+      "min_credit": 8,
+      "description": "实习、毕业设计、课程设计等实践类学分"
+    }
+  ],
+  "total_min_credit": 88
+}
