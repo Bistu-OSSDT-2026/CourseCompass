@@ -1,0 +1,35 @@
+{
+  "description": "学分规则数据。category 是分类标签，required_credits 是该类别需要修满的学分",
+  "rules": [
+    {
+      "rule_name": "通识必修学分要求",
+      "category": "通识必修",
+      "required_credits": 30.0,
+      "description": "全校必修：思政、英语、体育、计算机基础等"
+    },
+    {
+      "rule_name": "通识选修学分要求",
+      "category": "通识选修",
+      "required_credits": 12.0,
+      "description": "人文、社科、艺术、科技类通选课，自由组合"
+    },
+    {
+      "rule_name": "专业必修学分要求",
+      "category": "专业必修",
+      "required_credits": 50.0,
+      "description": "本专业核心课程，培养体系的主干"
+    },
+    {
+      "rule_name": "专业选修学分要求",
+      "category": "专业选修",
+      "required_credits": 20.0,
+      "description": "专业方向深化课程，按兴趣方向选择"
+    },
+    {
+      "rule_name": "实践环节学分要求",
+      "category": "实践环节",
+      "required_credits": 8.0,
+      "description": "毕业实习、课程设计、创新创业实践等"
+    }
+  ]
+}
