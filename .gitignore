@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+*.egg
+
+# Virtual environments
+venv/
+venv-linux/
+venv-test/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Frontend
+Web/Web/node_modules/
+Web/Web/dist/
+
+# Database backups
+*.db.backup
+*.db.bak
+
+# Environment files (local only)
+.env.local
+.env.development
+
+# Large archives
+*.zip
+*.tar.gz

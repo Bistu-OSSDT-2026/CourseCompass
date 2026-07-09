@@ -1,0 +1,50 @@
+# ============================================================
+# CourseCompass - Render Blueprint 部署配置
+# ============================================================
+# 使用 Render.com 一键部署后端 API + 前端静态文件
+#
+# 部署步骤:
+#   1. 将代码推送到 GitHub
+#   2. 在 Render Dashboard 选择 "Blueprint" 部署
+#   3. 连接仓库 → Render 自动读取此文件并创建服务
+#
+# 文档: https://render.com/docs/blueprint-spec
+# ============================================================
+
+services:
+  # ==========================================================
+  # 后端 Web 服务（API + 前端静态文件一体化）
+  # ==========================================================
+  - type: web
+    name: coursecompass
+    env: python
+    region: oregon                     # 免费用户建议选 Oregon（离国内相对近）
+
+    # --- 构建命令 ---
+    buildCommand: pip install -r backend/requirements.txt
+
+    # --- 启动命令（生产模式: Gunicorn + 前端一体化）---
+    startCommand: cd backend && gunicorn -c gunicorn_config.py wsgi:prod_app
+
+    # --- 环境变量 ---
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+      - key: SECRET_KEY
+        generateValue: true            # Render 自动生成安全密钥
+
+      - key: GUNICORN_WORKERS
+        value: "2"                     # Render 免费层 1 CPU，2 workers 最合适
+
+      - key: GUNICORN_TIMEOUT
+        value: "30"
+
+      - key: GUNICORN_LOGLEVEL
+        value: info
+
+    # --- 健康检查 ---
+    healthCheckPath: /api/health
+
+    # --- 免费计划配置 ---
+    plan: free
