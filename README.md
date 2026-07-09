@@ -4,7 +4,7 @@
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
-![Status](https://img.shields.io/badge/status-in%20development-orange.svg)
+![Status](https://img.shields.io/badge/status-live-brightgreen.svg)
 
 ---
 
@@ -22,15 +22,24 @@
 
 ## 🖼️ 截图
 
-![主页面](主页面.png)
-![兴趣测评页面](兴趣测评页面.png)
-![测评结果展示](测评结果展示.png)
-![课程导览](课程导览.png)
-![课程评价](课程评价.png)
-![教师列表](教师列表.png)
-![学分规划器](学分规划器.png)
+![主页面](assets/主页面.png)
+![兴趣测评页面](assets/兴趣测评页面.png)
+![测评结果展示](assets/测评结果展示.png)
+![课程导览](assets/课程导览.png)
+![课程评价](assets/课程评价.png)
+![教师列表](assets/教师列表.png)
+![学分规划器](assets/学分规划器.png)
 
 ---
+
+## 🌐 线上访问
+
+> 🔗 **https://coursecompass-0n33.onrender.com**
+
+> 注：部署于 Render 免费套餐，首次访问需等待约 30 秒冷启动。
+
+---
+
 
 ## 🚀 快速开始
 
@@ -43,7 +52,7 @@
 ### 克隆项目
 
 ```bash
-git clone https://github.com/your-org/coursecompass.git
+git clone https://github.com/Bistu-OSSDT-2026/CourseCompass.git
 cd coursecompass
 ```
 
@@ -168,7 +177,7 @@ GitHub Repo → Render Blueprint
 
 我们欢迎任何形式的贡献！请先阅读 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 
-有想法或发现 bug？[提一个 Issue](https://github.com/your-org/coursecompass/issues/new) 告诉我们。
+有想法或发现 bug？[提一个 Issue](https://github.com/Bistu-OSSDT-2026/CourseCompass/issues/new) 告诉我们。
 
 ---
 
