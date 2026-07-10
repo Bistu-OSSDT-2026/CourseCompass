@@ -189,4 +189,4 @@ GitHub Repo → Render Blueprint
 
 ## 👥 团队
 
-大一五人小组出品 · 第一个开源项目 · Bug 还没测所以不存在 🐛
+大一五人小组出品 · 第一个开源项目 · Bug 已消灭🐛
